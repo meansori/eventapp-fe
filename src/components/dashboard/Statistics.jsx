@@ -21,48 +21,48 @@ export default function Statistics() {
   if (isLoading) return <div className="text-center py-5">Loading statistics...</div>;
   if (isError) return <div className="alert alert-danger">Error loading statistics</div>;
 
-  return (
-    <Card>
-      <Card.Body>
-        <Card.Title className="d-flex align-items-center">
-          <span className="me-2">📊</span> Statistik Kehadiran Bulan Ini
-        </Card.Title>
+  // re 
+  //   <Card>
+  //     <Card.Body>
+  //       <Card.Title className="d-flex align-items-center">
+  //         <span className="me-2">📊</span> Statistik Kehadiran Bulan Ini
+  //       </Card.Title>
 
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Jumlah</th>
-              <th>Persentase</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stats.map((stat, index) => (
-              <tr key={index}>
-                <td>
-                  <Badge
-                    bg={
-                      stat.status_kehadiran === "Hadir"
-                        ? "success"
-                        : stat.status_kehadiran === "Terlambat"
-                        ? "warning"
-                        : stat.status_kehadiran === "Izin"
-                        ? "info"
-                        : stat.status_kehadiran === "Sakit"
-                        ? "secondary"
-                        : "danger"
-                    }
-                  >
-                    {stat.status_kehadiran}
-                  </Badge>
-                </td>
-                <td>{stat.jumlah}</td>
-                <td>{stat.persentase}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Card.Body>
-    </Card>
-  );
+  //       <Table striped bordered hover responsive>
+  //         <thead>
+  //           <tr>
+  //             <th>Status</th>
+  //             <th>Jumlah</th>
+  //             <th>Persentase</th>
+  //           </tr>
+  //         </thead>
+  //         <tbody>
+  //           {stats.map((stat, index) => (
+  //             <tr key={index}>
+  //               <td>
+  //                 <Badge
+  //                   bg={
+  //                     stat.status_kehadiran === "Hadir"
+  //                       ? "success"
+  //                       : stat.status_kehadiran === "Terlambat"
+  //                       ? "warning"
+  //                       : stat.status_kehadiran === "Izin"
+  //                       ? "info"
+  //                       : stat.status_kehadiran === "Sakit"
+  //                       ? "secondary"
+  //                       : "danger"
+  //                   }
+  //                 >
+  //                   {stat.status_kehadiran}
+  //                 </Badge>
+  //               </td>
+  //               <td>{stat.jumlah}</td>
+  //               <td>{stat.persentase}%</td>
+  //             </tr>
+  //           ))}
+  //         </tbody>
+  //       </Table>
+  //     </Card.Body>
+  //   </Card>
+  // );
 }

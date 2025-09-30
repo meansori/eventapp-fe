@@ -2,26 +2,28 @@ import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Modal, Button, Badge } from "react-bootstrap";
-import { useQuery } from "@tanstack/react-query";
+import { Modal, Button, Badge, ButtonGroup } from "react-bootstrap";
+import { useAuthenticatedQuery } from "../../hooks/useAuthenticatedQuery";
 import api from "../../services/api";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const localizer = momentLocalizer(moment);
 
-function fetchEvents() {
-  const now = new Date();
-  return api.get(`/acara/month/${now.getFullYear()}/${now.getMonth() + 1}`).then((res) => res.data);
+function fetchEventsByMonth(year, month) {
+  return api.get(`/acara/month/${year}/${month}`).then((res) => res.data);
 }
 
-export default function MonthlyCalendar() {
+// ... kode sebelumnya tetap sama ...
+
+export default function MonthlyCalendar({ currentMonth, onMonthChange }) {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const { data: apiEvents, isLoading } = useQuery({
-    queryKey: ["calendarEvents"],
-    queryFn: fetchEvents,
-  });
+  const year = moment(currentMonth).year();
+  const month = moment(currentMonth).month() + 1; // moment months are 0-indexed
+
+  const { data: apiEvents, isLoading } = useAuthenticatedQuery(["calendarEvents", year, month], () => fetchEventsByMonth(year, month));
 
   useEffect(() => {
     if (apiEvents) {
@@ -65,6 +67,55 @@ export default function MonthlyCalendar() {
     };
   };
 
+  const navigateToPreviousMonth = () => {
+    const newMonth = moment(currentMonth).subtract(1, "month");
+    onMonthChange(newMonth.toDate());
+  };
+
+  const navigateToNextMonth = () => {
+    const newMonth = moment(currentMonth).add(1, "month");
+    onMonthChange(newMonth.toDate());
+  };
+
+  const navigateToToday = () => {
+    onMonthChange(new Date());
+  };
+
+  const CustomToolbar = (toolbar) => {
+    const goToBack = () => {
+      toolbar.onNavigate("PREV");
+      navigateToPreviousMonth();
+    };
+
+    const goToNext = () => {
+      toolbar.onNavigate("NEXT");
+      navigateToNextMonth();
+    };
+
+    const goToCurrent = () => {
+      toolbar.onNavigate("TODAY");
+      navigateToToday();
+    };
+
+    return (
+      <div className="rbc-toolbar">
+        <span className="rbc-btn-group">
+          <button type="button" onClick={goToBack}>
+            <FaChevronLeft />
+          </button>
+          <button type="button" onClick={goToCurrent}>
+            Today
+          </button>
+          <button type="button" onClick={goToNext}>
+            <FaChevronRight />
+          </button>
+        </span>
+        <span className="rbc-toolbar-label">{toolbar.label}</span>
+        <span className="rbc-btn-group">{toolbar.viewNamesGroup}</span>
+      </div>
+    );
+  };
+
   if (isLoading) {
     return <div className="text-center py-5">Loading calendar...</div>;
   }
@@ -82,6 +133,10 @@ export default function MonthlyCalendar() {
           eventPropGetter={eventStyleGetter}
           views={["month"]}
           popup
+          date={currentMonth}
+          components={{
+            toolbar: CustomToolbar,
+          }}
         />
       </div>
 
@@ -97,17 +152,14 @@ export default function MonthlyCalendar() {
                 <strong>Deskripsi:</strong> {selectedEvent.deskripsi || "-"}
               </p>
               <p>
-                <strong>Tanggal:</strong> {moment(selectedEvent.tanggal_mulai).format("DD MMM YYYY HH:mm")} -{" "}
-                {moment(selectedEvent.tanggal_selesai).format("DD MMM YYYY HH:mm")}
+                <strong>Tanggal:</strong> {moment(selectedEvent.tanggal_mulai).format("DD MMM YYYY HH:mm")} - {moment(selectedEvent.tanggal_selesai).format("DD MMM YYYY HH:mm")}
               </p>
               <p>
                 <strong>Lokasi:</strong> {selectedEvent.lokasi}
               </p>
               <p>
                 <strong>Status:</strong>
-                <Badge className={`ms-2 status-badge status-${selectedEvent.status_acara.toLowerCase()}`}>
-                  {selectedEvent.status_acara}
-                </Badge>
+                <Badge className={`ms-2 status-badge status-${selectedEvent.status_acara.toLowerCase()}`}>{selectedEvent.status_acara}</Badge>
               </p>
             </>
           )}

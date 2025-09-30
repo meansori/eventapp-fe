@@ -8,6 +8,8 @@ export default function ParticipantList({ participants, onEdit, onDelete }) {
         <thead>
           <tr>
             <th>Nama Peserta</th>
+            <th>Jenis Kelamin</th>
+            <th>Agama</th>
             <th>Asal</th>
             <th>Kategori</th>
             <th>Aksi</th>
@@ -17,7 +19,9 @@ export default function ParticipantList({ participants, onEdit, onDelete }) {
           {participants.length > 0 ? (
             participants.map((participant) => (
               <tr key={participant.id_peserta}>
-                <td className="fw-bold">{participant.nama_peserta}</td>
+                <td>{participant.nama_peserta}</td>
+                <td>{participant.jenis_kelamin ? <Badge bg={participant.jenis_kelamin === "Laki-laki" ? "primary" : "danger"}>{participant.jenis_kelamin}</Badge> : "-"}</td>
+                <td>{participant.agama || "-"}</td>
                 <td>{participant.asal || "-"}</td>
                 <td>{participant.kategori ? <Badge bg="secondary">{participant.kategori}</Badge> : "-"}</td>
                 <td>
@@ -32,7 +36,7 @@ export default function ParticipantList({ participants, onEdit, onDelete }) {
             ))
           ) : (
             <tr>
-              <td colSpan={4} className="text-center py-3 text-muted">
+              <td colSpan={6} className="text-center py-3 text-muted">
                 Tidak ada peserta ditemukan
               </td>
             </tr>

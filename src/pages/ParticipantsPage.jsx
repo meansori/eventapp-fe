@@ -4,6 +4,7 @@ import api from "../services/api";
 import ParticipantList from "../components/participants/ParticipantList";
 import ParticipantForm from "../components/participants/ParticipantForm";
 import { Button, Modal, Form } from "react-bootstrap";
+import { FaFileImport, FaChartBar, FaPlus } from "react-icons/fa";
 
 function fetchParticipants() {
   return api.get("/peserta").then((res) => res.data);
@@ -48,24 +49,34 @@ export default function ParticipantsPage() {
   };
 
   const filteredParticipants =
-    participants?.filter((p) => p.nama_peserta.toLowerCase().includes(search.toLowerCase())) || [];
+    participants?.filter(
+      (p) =>
+        p.nama_peserta.toLowerCase().includes(search.toLowerCase()) ||
+        (p.asal && p.asal.toLowerCase().includes(search.toLowerCase())) ||
+        (p.kategori && p.kategori.toLowerCase().includes(search.toLowerCase())) ||
+        (p.jenis_kelamin && p.jenis_kelamin.toLowerCase().includes(search.toLowerCase())) ||
+        (p.agama && p.agama.toLowerCase().includes(search.toLowerCase()))
+    ) || [];
 
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Master Peserta</h1>
-        <Button onClick={() => setShowForm(true)}>
-          <span className="me-2">+</span> Tambah Peserta
-        </Button>
+        <div className="d-flex gap-2">
+          <Button variant="outline-primary" onClick={() => (window.location.href = "/import-participants")}>
+            <FaFileImport className="me-2" /> Import
+          </Button>
+          <Button variant="outline-primary" onClick={() => (window.location.href = "/participant-report")}>
+            <FaChartBar className="me-2" /> Laporan
+          </Button>
+          <Button onClick={() => setShowForm(true)}>
+            <FaPlus className="me-2" /> Tambah Peserta
+          </Button>
+        </div>
       </div>
 
       <div className="mb-4">
-        <Form.Control
-          type="text"
-          placeholder="Cari peserta..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <Form.Control type="text" placeholder="Cari peserta..." value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
 
       {isLoading ? (

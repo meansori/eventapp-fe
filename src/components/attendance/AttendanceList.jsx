@@ -116,7 +116,7 @@ export default function AttendanceList({ attendance, onEdit, onDelete }) {
             {attendance?.length > 0 ? (
               attendance.map((att) => (
                 <tr key={att.id_absensi}>
-                  <td className="fw-bold">{att.nama_peserta}</td>
+                  <td>{att.nama_peserta}</td>
                   <td>{att.asal || "-"}</td>
                   <td>
                     <Badge
@@ -135,7 +135,7 @@ export default function AttendanceList({ attendance, onEdit, onDelete }) {
                       {att.status_kehadiran}
                     </Badge>
                   </td>
-                  <td>{formatDate(att.waktu_absen, "DD MMM YYYY HH:mm")}</td>
+                  <td>{formatDate(att.waktu_absen, "DD MM YYYY HH:mm:ss")}</td>
                   <td>
                     <Button variant="outline-primary" size="sm" className="me-2" onClick={() => onEdit(att)}>
                       Edit

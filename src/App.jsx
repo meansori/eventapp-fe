@@ -9,6 +9,8 @@ import DashboardPage from "./pages/DashboardPage";
 import EventsPage from "./pages/EventsPage";
 import ParticipantsPage from "./pages/ParticipantsPage";
 import AttendancePage from "./pages/AttendancePage";
+import ImportParticipants from "./pages/ImportParticipants";
+import ParticipantReport from "./pages/ParticipantReport";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
           <Route path="events" element={<EventsPage />} />
           <Route path="participants" element={<ParticipantsPage />} />
           <Route path="attendance" element={<AttendancePage />} />
+          <Route path="import-participants" element={<ImportParticipants />} />
+          <Route path="participant-report" element={<ParticipantReport />} />
           {/* Redirect from root to dashboard when authenticated */}
           <Route path="" element={<Navigate to="/dashboard" replace />} />
         </Route>

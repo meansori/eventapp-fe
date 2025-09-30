@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../services/api";
-import { Form, Button, Row, Col, InputGroup, FormControl } from "react-bootstrap";
+import { Form, Button, Row, Col, InputGroup, FormControl, Card, ListGroup, Badge } from "react-bootstrap";
 import { FaSearch, FaPlus } from "react-icons/fa";
 
 function fetchParticipants() {
@@ -24,6 +24,8 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
     kategori: "",
   });
   const [showNewParticipant, setShowNewParticipant] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const searchRef = useRef(null);
 
   const queryClient = useQueryClient();
 
@@ -40,12 +42,18 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
         id_peserta: attendance.id_peserta,
         status_kehadiran: attendance.status_kehadiran,
       });
+      // Find the participant name for display
+      const participant = participants.find((p) => p.id_peserta === attendance.id_peserta);
+      if (participant) {
+        setSearchTerm(participant.nama_peserta);
+      }
     }
-  }, [attendance]);
+  }, [attendance, participants]);
 
   useEffect(() => {
     if (searchTerm === "") {
       setFilteredParticipants(participants);
+      setShowSearchResults(false);
     } else {
       const filtered = participants.filter(
         (p) =>
@@ -54,8 +62,22 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
           (p.kategori && p.kategori.toLowerCase().includes(searchTerm.toLowerCase()))
       );
       setFilteredParticipants(filtered);
+      setShowSearchResults(true);
     }
   }, [searchTerm, participants]);
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSearchResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -67,6 +89,8 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    // Clear selected participant when searching
+    setFormData((prev) => ({ ...prev, id_peserta: "" }));
   };
 
   const handleNewParticipantChange = (e) => {
@@ -104,6 +128,8 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
       const newParticipantData = { id_peserta: newId, ...newParticipant };
       setParticipants((prev) => [...prev, newParticipantData]);
       setFilteredParticipants((prev) => [...prev, newParticipantData]);
+      setSearchTerm(newParticipant.nama_peserta);
+      setShowSearchResults(false);
       setShowNewParticipant(false);
       setNewParticipant({
         nama_peserta: "",
@@ -115,6 +141,10 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData.id_peserta) {
+      alert("Silakan pilih peserta terlebih dahulu");
+      return;
+    }
     const data = {
       id_acara: eventId,
       ...formData,
@@ -128,7 +158,20 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
 
   const handleAddParticipant = (e) => {
     e.preventDefault();
+    if (!newParticipant.nama_peserta) {
+      alert("Nama peserta harus diisi");
+      return;
+    }
     addNewParticipant.mutate(newParticipant);
+  };
+
+  const handleSelectParticipant = (participant) => {
+    setFormData((prev) => ({
+      ...prev,
+      id_peserta: participant.id_peserta,
+    }));
+    setSearchTerm(participant.nama_peserta);
+    setShowSearchResults(false);
   };
 
   const handleStatusChange = (status) => {
@@ -149,30 +192,53 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3">
-        <Form.Label>Peserta</Form.Label>
-        <InputGroup className="mb-2">
-          <InputGroup.Text>
-            <FaSearch />
-          </InputGroup.Text>
-          <FormControl placeholder="Cari peserta..." value={searchTerm} onChange={handleSearchChange} />
-        </InputGroup>
-        <Form.Select name="id_peserta" value={formData.id_peserta} onChange={handleChange} required>
-          <option value="">-- Pilih Peserta --</option>
-          {filteredParticipants.map((p) => (
-            <option key={p.id_peserta} value={p.id_peserta}>
-              {p.nama_peserta} {p.asal ? `(${p.asal})` : ""} {p.kategori ? `[${p.kategori}]` : ""}
-            </option>
-          ))}
-        </Form.Select>
-        <Button variant="link" className="p-0 mt-1" onClick={() => setShowNewParticipant(!showNewParticipant)}>
-          {showNewParticipant ? (
-            "Batal"
-          ) : (
-            <>
-              <FaPlus className="me-1" /> Tambah Peserta Baru
-            </>
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <Form.Label className="mb-0">Peserta</Form.Label>
+          <Button variant="outline-primary" size="sm" onClick={() => setShowNewParticipant(!showNewParticipant)}>
+            <FaPlus className="me-1" /> Tambah Data
+          </Button>
+        </div>
+
+        <div ref={searchRef} className="position-relative">
+          <InputGroup>
+            <FormControl placeholder="Cari peserta..." value={searchTerm} onChange={handleSearchChange} onFocus={() => searchTerm && setShowSearchResults(true)} />
+            <InputGroup.Text>
+              <FaSearch />
+            </InputGroup.Text>
+          </InputGroup>
+
+          {showSearchResults && filteredParticipants.length > 0 && (
+            <Card className="position-absolute w-100 mt-1 z-index-10" style={{ zIndex: 10 }}>
+              <ListGroup variant="flush" style={{ maxHeight: "200px", overflowY: "auto" }}>
+                {filteredParticipants.map((p) => (
+                  <ListGroup.Item key={p.id_peserta} action onClick={() => handleSelectParticipant(p)} className="py-2">
+                    <div className="d-flex justify-content-between align-items-start">
+                      <div>
+                        <div className="fw-bold">{p.nama_peserta}</div>
+                        {p.asal && <div className="small text-muted">{p.asal}</div>}
+                        {p.kategori && <div className="small text-muted">[{p.kategori}]</div>}
+                      </div>
+                      <div className="text-end">
+                        {p.jenis_kelamin && (
+                          <Badge bg={p.jenis_kelamin === "Laki-laki" ? "primary" : "danger"} className="me-1">
+                            {p.jenis_kelamin}
+                          </Badge>
+                        )}
+                        {p.agama && <Badge bg="info">{p.agama}</Badge>}
+                      </div>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Card>
           )}
-        </Button>
+
+          {showSearchResults && filteredParticipants.length === 0 && (
+            <Card className="position-absolute w-100 mt-1 z-index-10" style={{ zIndex: 10 }}>
+              <Card.Body className="text-center py-2">Tidak ada peserta ditemukan</Card.Body>
+            </Card>
+          )}
+        </div>
       </Form.Group>
 
       {showNewParticipant && (
@@ -182,35 +248,19 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>Nama Peserta</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="nama_peserta"
-                  value={newParticipant.nama_peserta}
-                  onChange={handleNewParticipantChange}
-                  required
-                />
+                <Form.Control type="text" name="nama_peserta" value={newParticipant.nama_peserta} onChange={handleNewParticipantChange} required />
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>Asal</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="asal"
-                  value={newParticipant.asal}
-                  onChange={handleNewParticipantChange}
-                />
+                <Form.Control type="text" name="asal" value={newParticipant.asal} onChange={handleNewParticipantChange} />
               </Form.Group>
             </Col>
           </Row>
           <Form.Group className="mb-3">
             <Form.Label>Kategori</Form.Label>
-            <Form.Control
-              type="text"
-              name="kategori"
-              value={newParticipant.kategori}
-              onChange={handleNewParticipantChange}
-            />
+            <Form.Control type="text" name="kategori" value={newParticipant.kategori} onChange={handleNewParticipantChange} />
           </Form.Group>
           <Button variant="primary" onClick={handleAddParticipant}>
             Simpan Peserta
@@ -224,18 +274,10 @@ export default function AttendanceForm({ eventId, attendance, onSuccess }) {
           {statusOptions.map((option) => (
             <div
               key={option.value}
-              className={`status-checkbox ${formData.status_kehadiran === option.value ? "selected" : ""} bg-${
-                option.color
-              } bg-opacity-10`}
+              className={`status-checkbox ${formData.status_kehadiran === option.value ? "selected" : ""} bg-${option.color} bg-opacity-10`}
               onClick={() => handleStatusChange(option.value)}
             >
-              <Form.Check
-                type="checkbox"
-                id={`status-${option.value}`}
-                checked={formData.status_kehadiran === option.value}
-                onChange={() => {}}
-                className="me-2"
-              />
+              <Form.Check type="checkbox" id={`status-${option.value}`} checked={formData.status_kehadiran === option.value} onChange={() => {}} className="me-2" />
               <span className={`text-${option.color} fw-bold`}>{option.label}</span>
             </div>
           ))}

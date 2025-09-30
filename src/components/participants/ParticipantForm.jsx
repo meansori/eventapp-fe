@@ -8,6 +8,8 @@ export default function ParticipantForm({ participant, onSuccess }) {
     nama_peserta: "",
     asal: "",
     kategori: "",
+    jenis_kelamin: "",
+    agama: "",
   });
 
   const queryClient = useQueryClient();
@@ -18,6 +20,8 @@ export default function ParticipantForm({ participant, onSuccess }) {
         nama_peserta: participant.nama_peserta,
         asal: participant.asal || "",
         kategori: participant.kategori || "",
+        jenis_kelamin: participant.jenis_kelamin || "",
+        agama: participant.agama || "",
       });
     }
   }, [participant]);
@@ -61,6 +65,34 @@ export default function ParticipantForm({ participant, onSuccess }) {
         <Form.Label>Nama Peserta</Form.Label>
         <Form.Control type="text" name="nama_peserta" value={formData.nama_peserta} onChange={handleChange} required />
       </Form.Group>
+
+      <Row>
+        <Col md={6}>
+          <Form.Group className="mb-3">
+            <Form.Label>Jenis Kelamin</Form.Label>
+            <Form.Select name="jenis_kelamin" value={formData.jenis_kelamin} onChange={handleChange}>
+              <option value="">-- Pilih Jenis Kelamin --</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+        <Col md={6}>
+          <Form.Group className="mb-3">
+            <Form.Label>Agama</Form.Label>
+            <Form.Select name="agama" value={formData.agama} onChange={handleChange}>
+              <option value="">-- Pilih Agama --</option>
+              <option value="Islam">Islam</option>
+              <option value="Kristen">Kristen</option>
+              <option value="Katolik">Katolik</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Buddha">Buddha</option>
+              <option value="Konghucu">Konghucu</option>
+              <option value="Lainnya">Lainnya</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+      </Row>
 
       <Row>
         <Col md={6}>

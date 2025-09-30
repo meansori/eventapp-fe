@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaUser, FaCalendarAlt, FaUsers, FaUserCheck, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaCalendarAlt, FaUsers, FaUser, FaUserCheck, FaFileImport, FaChartBar, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
 export default function Sidebar() {
@@ -11,9 +11,8 @@ export default function Sidebar() {
 
   return (
     <div className="sidebar">
-      {/* Perbarui logo agar mengarah ke dashboard */}
       <Link to="/dashboard" className="mb-4 text-center text-white text-decoration-none">
-        <h2>Event Manager</h2>
+        <h2>Eventify</h2>
       </Link>
 
       {currentUser && (

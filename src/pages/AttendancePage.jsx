@@ -92,22 +92,13 @@ export default function AttendancePage() {
               <Card.Title className="d-flex justify-content-between align-items-center">
                 <span>{selectedEvent.nama_acara}</span>
                 <Badge
-                  bg={
-                    selectedEvent.status_acara === "scheduled"
-                      ? "primary"
-                      : selectedEvent.status_acara === "ongoing"
-                      ? "warning"
-                      : selectedEvent.status_acara === "completed"
-                      ? "success"
-                      : "danger"
-                  }
+                  bg={selectedEvent.status_acara === "scheduled" ? "primary" : selectedEvent.status_acara === "ongoing" ? "warning" : selectedEvent.status_acara === "completed" ? "success" : "danger"}
                 >
                   {selectedEvent.status_acara}
                 </Badge>
               </Card.Title>
               <Card.Text>
-                {new Date(selectedEvent.tanggal_mulai).toLocaleString()} -{" "}
-                {new Date(selectedEvent.tanggal_selesai).toLocaleString()}
+                {new Date(selectedEvent.tanggal_mulai).toLocaleString()} - {new Date(selectedEvent.tanggal_selesai).toLocaleString()}
               </Card.Text>
               <Card.Text>
                 <strong>Lokasi:</strong> {selectedEvent.lokasi}

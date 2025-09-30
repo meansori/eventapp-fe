@@ -16,11 +16,9 @@ export default function EventList({ events, onEdit, onDelete, onViewDetail }) {
         <tbody>
           {events.map((event) => (
             <tr key={event.id_acara}>
-              <td className="fw-bold">{event.nama_acara}</td>
+              <td>{event.nama_acara}</td>
               <td>
-                <Badge className={`status-badge status-${event.status_acara.toLowerCase()}`}>
-                  {event.status_acara}
-                </Badge>
+                <Badge className={`status-badge status-${event.status_acara.toLowerCase()}`}>{event.status_acara}</Badge>
               </td>
               <td>
                 <Button variant="outline-primary" size="sm" className="me-2" onClick={() => onViewDetail(event)}>
