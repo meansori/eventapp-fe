@@ -1,6 +1,5 @@
-import React from "react";
 import { Card, Row, Col, Badge, Table } from "react-bootstrap";
-import formatDate from "../../utils/formatDate";
+import { formatDate } from "../../utils/formatDate";
 
 export default function EventDetail({ event, statistics }) {
   return (
@@ -21,11 +20,11 @@ export default function EventDetail({ event, statistics }) {
                 </tr>
                 <tr>
                   <td className="fw-bold">Tanggal Mulai</td>
-                  <td>{formatDate(event.tanggal_mulai, "DD MMM YYYY HH:mm")}</td>
+                  <td>{formatDate(event.tanggal_mulai, "DD/MM/YYYY HH:mm")}</td>
                 </tr>
                 <tr>
                   <td className="fw-bold">Tanggal Selesai</td>
-                  <td>{formatDate(event.tanggal_selesai, "DD MMM YYYY HH:mm")}</td>
+                  <td>{formatDate(event.tanggal_selesai, "DD/MM/YYYY HH:mm")}</td>
                 </tr>
                 <tr>
                   <td className="fw-bold">Lokasi</td>

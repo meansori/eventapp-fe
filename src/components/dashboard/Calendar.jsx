@@ -1,6 +1,5 @@
-import React from "react";
 import { Card, ListGroup, Badge } from "react-bootstrap";
-import formatDate from "../../utils/formatDate";
+import { formatDate } from "../../utils/formatDate";
 
 export default function Calendar({ events }) {
   return (

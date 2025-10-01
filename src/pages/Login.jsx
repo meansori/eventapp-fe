@@ -49,7 +49,14 @@ export default function LoginPage() {
                       <span className="input-group-text bg-primary bg-opacity-10 text-primary border-end-0">
                         <FaEnvelope />
                       </span>
-                      <Form.Control type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required className="border-start-0" />
+                      <Form.Control
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                        className="border-start-0"
+                      />
                     </div>
                   </Form.Group>
                   <Form.Group className="mb-4">
@@ -57,7 +64,14 @@ export default function LoginPage() {
                       <span className="input-group-text bg-primary bg-opacity-10 text-primary border-end-0">
                         <FaLock />
                       </span>
-                      <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required className="border-start-0" />
+                      <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="border-start-0"
+                      />
                     </div>
                   </Form.Group>
                   <Button disabled={loading} className="w-100 btn-cta" type="submit">

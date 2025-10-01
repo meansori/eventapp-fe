@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../services/api";
 import EventList from "../components/events/EventList";
@@ -40,6 +40,8 @@ export default function EventsPage() {
   });
 
   const handleViewDetail = async (event) => {
+    console.log("Viewing details for event:", event);
+
     setSelectedEvent(event);
     try {
       const stats = await fetchEventStatistics(event.id_acara);

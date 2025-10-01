@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, Row, Col, Badge } from "react-bootstrap";
 import { useAuthenticatedQuery } from "../../hooks/useAuthenticatedQuery";
 import api from "../../services/api";
@@ -8,7 +7,9 @@ function fetchEventsByMonth(year, month) {
 }
 
 export default function EventStatistics({ year, month }) {
-  const { data: events, isLoading } = useAuthenticatedQuery(["eventStatistics", year, month], () => fetchEventsByMonth(year, month));
+  const { data: events, isLoading } = useAuthenticatedQuery(["eventStatistics", year, month], () =>
+    fetchEventsByMonth(year, month)
+  );
 
   if (isLoading) {
     return <div className="text-center py-3">Loading statistics...</div>;

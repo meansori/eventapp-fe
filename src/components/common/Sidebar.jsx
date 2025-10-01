@@ -1,6 +1,14 @@
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaCalendarAlt, FaUsers, FaUser, FaUserCheck, FaFileImport, FaChartBar, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaHome,
+  FaCalendarAlt,
+  FaUsers,
+  FaUser,
+  FaUserCheck,
+  FaFileImport,
+  FaChartBar,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
 export default function Sidebar() {

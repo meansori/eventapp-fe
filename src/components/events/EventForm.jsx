@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../contexts/AuthContext";
 import api from "../../services/api";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import formatDate from "../../utils/formatDate";
+import { formatDate, formatToDatetimeLocal } from "../../utils/formatDate";
 
 export default function EventForm({ event, onSuccess }) {
   const { currentUser } = useAuth();
@@ -20,11 +20,12 @@ export default function EventForm({ event, onSuccess }) {
 
   useEffect(() => {
     if (event) {
+      console.log("Editing event:", event);
       setFormData({
         nama_acara: event.nama_acara,
         deskripsi: event.deskripsi || "",
-        tanggal_mulai: event.tanggal_mulai ? event.tanggal_mulai.slice(0, 16) : "",
-        tanggal_selesai: event.tanggal_selesai ? event.tanggal_selesai.slice(0, 16) : "",
+        tanggal_mulai: event.tanggal_mulai ? formatToDatetimeLocal(event.tanggal_mulai) : "",
+        tanggal_selesai: event.tanggal_selesai ? formatToDatetimeLocal(event.tanggal_selesai) : "",
         lokasi: event.lokasi,
         status_acara: event.status_acara,
       });

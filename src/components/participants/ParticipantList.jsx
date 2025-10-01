@@ -1,4 +1,3 @@
-import React from "react";
 import { Table, Button, Badge } from "react-bootstrap";
 
 export default function ParticipantList({ participants, onEdit, onDelete }) {
@@ -7,6 +6,7 @@ export default function ParticipantList({ participants, onEdit, onDelete }) {
       <Table striped bordered hover>
         <thead>
           <tr>
+            <th>No</th>
             <th>Nama Peserta</th>
             <th>Jenis Kelamin</th>
             <th>Agama</th>
@@ -17,10 +17,19 @@ export default function ParticipantList({ participants, onEdit, onDelete }) {
         </thead>
         <tbody>
           {participants.length > 0 ? (
-            participants.map((participant) => (
+            participants.map((participant, index) => (
               <tr key={participant.id_peserta}>
+                <td>{index + 1}</td>
                 <td>{participant.nama_peserta}</td>
-                <td>{participant.jenis_kelamin ? <Badge bg={participant.jenis_kelamin === "Laki-laki" ? "primary" : "danger"}>{participant.jenis_kelamin}</Badge> : "-"}</td>
+                <td>
+                  {participant.jenis_kelamin ? (
+                    <Badge bg={participant.jenis_kelamin === "Laki-laki" ? "primary" : "danger"}>
+                      {participant.jenis_kelamin}
+                    </Badge>
+                  ) : (
+                    "-"
+                  )}
+                </td>
                 <td>{participant.agama || "-"}</td>
                 <td>{participant.asal || "-"}</td>
                 <td>{participant.kategori ? <Badge bg="secondary">{participant.kategori}</Badge> : "-"}</td>

@@ -1,6 +1,5 @@
-import React from "react";
 import { Table, Button, Badge, Card, Row, Col } from "react-bootstrap";
-import formatDate from "../../utils/formatDate";
+import { formatDate } from "../../utils/formatDate";
 
 function calculateStatistics(attendanceData) {
   if (!attendanceData || attendanceData.length === 0) {

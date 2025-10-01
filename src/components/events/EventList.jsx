@@ -1,6 +1,5 @@
-import React from "react";
 import { Table, Button, Badge } from "react-bootstrap";
-import formatDate from "../../utils/formatDate";
+import { formatDate } from "../../utils/formatDate";
 
 export default function EventList({ events, onEdit, onDelete, onViewDetail }) {
   return (
@@ -8,17 +7,25 @@ export default function EventList({ events, onEdit, onDelete, onViewDetail }) {
       <Table striped bordered hover>
         <thead>
           <tr>
+            <th>No</th>
             <th>Nama Acara</th>
+            <th>Tanggal Mulai</th>
+            <th>Tanggal Selesai</th>
             <th>Status</th>
             <th>Aksi</th>
           </tr>
         </thead>
         <tbody>
-          {events.map((event) => (
+          {events.map((event, index) => (
             <tr key={event.id_acara}>
+              <td>{index + 1}</td>
               <td>{event.nama_acara}</td>
+              <td>{formatDate(event.tanggal_mulai, "DD/MM/YYYY HH:mm")}</td>
+              <td>{formatDate(event.tanggal_selesai, "DD/MM/YYYY HH:mm")}</td>
               <td>
-                <Badge className={`status-badge status-${event.status_acara.toLowerCase()}`}>{event.status_acara}</Badge>
+                <Badge className={`status-badge status-${event.status_acara.toLowerCase()}`}>
+                  {event.status_acara}
+                </Badge>
               </td>
               <td>
                 <Button variant="outline-primary" size="sm" className="me-2" onClick={() => onViewDetail(event)}>

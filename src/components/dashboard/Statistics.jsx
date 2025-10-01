@@ -1,7 +1,5 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../services/api";
-import { Card, Table, Badge } from "react-bootstrap";
 
 function fetchStatistics() {
   const now = new Date();
@@ -21,7 +19,7 @@ export default function Statistics() {
   if (isLoading) return <div className="text-center py-5">Loading statistics...</div>;
   if (isError) return <div className="alert alert-danger">Error loading statistics</div>;
 
-  // re 
+  // re
   //   <Card>
   //     <Card.Body>
   //       <Card.Title className="d-flex align-items-center">

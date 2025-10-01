@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaHome, FaCalendarAlt, FaUsers, FaUserCheck, FaFileImport, FaChartBar, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
